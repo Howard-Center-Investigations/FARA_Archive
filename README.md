@@ -10,6 +10,8 @@ This is an archive of Foreign Agent Registration Act filings and data.
 
 - The DocumentCLoud archive will be updated in the coming days to update with new filings on a daily basis
 
+- The file failed_fara_downloads.csv in the repository contains a list of filings that cannot be successfully downloaded using the urls provided at FARA.gov
+
 
 The file FARA_All_RegistrantDocs_03222025 in this repository contains a column "DocumentCloud Name," which can be used to search the archive for individual filings. The names are derived from the end of the urls that (currently) lead to the DOJ's copy of the record, and follow the format: RegistrationNumber-DocumentType-Date-MysteryExtraNumber.
 
