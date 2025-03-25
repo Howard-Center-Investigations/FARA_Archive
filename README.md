@@ -21,4 +21,4 @@ The datasets folder in this repository contains static datasets from 3/25/2025 f
 
 The bulk_data_files folder in this repository contains the csv files available for download from the [Bulk Data](https://efile.fara.gov/ords/fara/f?p=107:21::::::) page of FARA/gov.
 
-- These files ARE updated a minimum of one time per day
+- These files ARE updated a minimum of once per day
