@@ -2,7 +2,7 @@ name: Run FARA Scraper Daily
 
 on:
   schedule:
-    - cron: '0 9 * * *'
+    - cron: '0 10 * * *'
   workflow_dispatch:
 
 permissions:
@@ -45,4 +45,9 @@ jobs:
 
           git add datasets/*.csv datasets/last_updated.txt
           git commit -m "📊 Update FARA CSVs [skip ci]" || echo "Nothing to commit"
+
+          # Pull with rebase to avoid push conflicts
+          git pull --rebase origin main
+
+          # Push updates
           git push
