@@ -14,10 +14,10 @@ This is an archive of Foreign Agent Registration Act filings and data.
 
 - The file failed_fara_downloads.csv in the repository contains a list of filings that cannot be successfully downloaded using the urls provided at FARA.gov
 
-The datasets folder in this repository contains datasets from the [Browse Filings](https://efile.fara.gov/ords/fara/f?p=1381:1:1551967097995:::::) page of FARA.gov.
+The "datasets" folder in this repository contains datasets from the [Browse Filings](https://efile.fara.gov/ords/fara/f?p=1381:1:1551967097995:::::) page of FARA.gov.
 
 - These files are updated a minimum of once per day
 
-The bulk_data_files folder in this repository contains the csv files available for download from the [Bulk Data](https://efile.fara.gov/ords/fara/f?p=107:21::::::) page of FARA/gov.
+The "bulk_data_files folder" in this repository contains the csv files available for download from the [Bulk Data](https://efile.fara.gov/ords/fara/f?p=107:21::::::) page of FARA/gov.
 
 - These files are updated a minimum of once per day
