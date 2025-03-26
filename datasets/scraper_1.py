@@ -6,13 +6,24 @@ from playwright.sync_api import sync_playwright
 def sanitize_filename(text):
     return re.sub(r'[^a-zA-Z0-9_\-]', '', text.replace(" ", "_"))
 
+def save_download(download, label):
+    # Ensure datasets directory exists
+    datasets_dir = os.path.join(os.getcwd(), "datasets")
+    os.makedirs(datasets_dir, exist_ok=True)
+
+    # Save with date-stamped filename
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    filename = f"{sanitize_filename(label)}_{date_str}.csv"
+    save_path = os.path.join(datasets_dir, filename)
+    download.save_as(save_path)
+    print(f"✅ Saved to: {save_path}")
+
+# STEP 1: Static Section Downloads
 def download_csv_from_section(page, link_text):
-    print(f"\n📥 Downloading: {link_text}")
+    print(f"\n📥 Downloading static section: {link_text}")
     
-    # Click the desired section link
     page.wait_for_selector(f"a:has-text('{link_text}')")
     page.click(f"a:has-text('{link_text}')")
-
     page.wait_for_load_state("networkidle")
 
     page.wait_for_selector("button:has-text('Actions')")
@@ -26,33 +37,66 @@ def download_csv_from_section(page, link_text):
         page.click("text=CSV", no_wait_after=True)
     download = download_info.value
 
-    # Create datasets directory if it doesn't exist
-    datasets_dir = os.path.join(os.getcwd(), "datasets")
-    os.makedirs(datasets_dir, exist_ok=True)
-
-    # Create date-stamped filename
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    clean_filename = f"{sanitize_filename(link_text)}_{date_str}.csv"
-    save_path = os.path.join(datasets_dir, clean_filename)
-    download.save_as(save_path)
-    print(f"✅ Saved to: {save_path}")
+    save_download(download, link_text)
 
     # Return to homepage
     page.goto('https://efile.fara.gov/ords/fara/f?p=1381:1')
     page.wait_for_selector("a:has-text('Active Registrants')")
 
+# STEP 2: Date-Range Section Downloads
+fromdate_fields = {
+    "Active Registrants in a Date Range": "P140_FROMDATE",
+    "Active Registrants by Country or Location in a Date Range": "P11_FROMDATE",
+    "Registrant Supplemental Statements by Country or Location in a Date Range": "P25_FROMDATE",
+    "New Registrants in a Date Range": "P6_FROMDATE",
+    "Terminated Registrants in a Date Range": "P7_FROMDATE",
+    "Active Short Form Registrants in a Date Range": "P142_FROMDATE",
+    "New Short Form Registrants in a Date Range": "P124_FROMDATE",
+    "Terminated Short Form Registrants in a Date Range": "P126_FROMDATE",
+    "Active Foreign Principals in a Date Range": "P130_FROMDATE",
+    "New Foreign Principals in a Date Range": "P132_FROMDATE",
+    "Terminated Foreign Principals in a Date Range": "P138_FROMDATE"
+}
+
+def process_date_range_section(page, section_name):
+    print(f"\n📥 Downloading date-range section: {section_name}")
+    
+    page.goto("https://efile.fara.gov/ords/fara/f?p=1381:1")
+    page.wait_for_selector(f"a:has-text('{section_name}')")
+    page.click(f"a:has-text('{section_name}')")
+    page.wait_for_load_state("networkidle")
+
+    fromdate_field = fromdate_fields.get(section_name)
+    if not fromdate_field:
+        raise Exception(f"No FROMDATE mapping found for: {section_name}")
+
+    page.wait_for_selector(f"input[name='{fromdate_field}']")
+    page.fill(f"input[name='{fromdate_field}']", "01/01/1900")
+
+    page.click("button:has-text('Go')")
+    page.wait_for_load_state("networkidle")
+
+    page.wait_for_selector("button:has-text('Actions')")
+    page.click("button:has-text('Actions')")
+
+    page.wait_for_selector("text=Download")
+    page.click("text=Download")
+
+    with page.expect_download() as download_info:
+        page.wait_for_selector("text=CSV")
+        page.click("text=CSV", no_wait_after=True)
+    download = download_info.value
+
+    save_download(download, section_name)
+
+# MAIN FLOW
 with sync_playwright() as p:
     browser = p.chromium.launch()
     context = browser.new_context(accept_downloads=True)
-
-    context.set_default_timeout(0)
     page = context.new_page()
-    page.set_default_timeout(0)
 
-    page.goto('https://efile.fara.gov/ords/fara/f?p=1381:1')
-    page.wait_for_selector("a:has-text('Active Registrants')")
-
-    sections = [
+    # --- Step 1: Static Sections ---
+    static_sections = [
         "Active Registrants",
         "Active Registrants by Country or Location Represented",
         "Historical List of All Registrants (Active and Terminated)",
@@ -70,10 +114,22 @@ with sync_playwright() as p:
         "Historical List of All Foreign Principals (Active and Terminated)"
     ]
 
-    for section in sections:
+    print("\n🟢 STEP 1: Downloading static sections...")
+    page.goto("https://efile.fara.gov/ords/fara/f?p=1381:1")
+    page.wait_for_selector("a:has-text('Active Registrants')")
+
+    for section in static_sections:
         try:
             download_csv_from_section(page, section)
         except Exception as e:
             print(f"❌ Failed to download '{section}': {e}")
+
+    # --- Step 2: Date-Range Sections ---
+    print("\n🟢 STEP 2: Downloading date-range sections...")
+    for section in fromdate_fields.keys():
+        try:
+            process_date_range_section(page, section)
+        except Exception as e:
+            print(f"❌ Failed to process '{section}': {e}")
 
     browser.close()
