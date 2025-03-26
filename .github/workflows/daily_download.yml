@@ -3,7 +3,6 @@ name: Daily FARA Data Download
 on:
   schedule:
     - cron: '0 9 * * *'      # Runs daily at 6 AM UTC
-  push:                      # Runs on any push to the repo
   workflow_dispatch:         # Allows manual trigger via GitHub UI
 
 jobs:

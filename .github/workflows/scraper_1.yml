@@ -1,4 +1,4 @@
-name: Run FARA Scraper Daily
+name: Run FARA Scraper 1 Daily
 
 on:
   schedule:
