@@ -26,10 +26,14 @@ def download_csv_from_section(page, link_text):
         page.click("text=CSV", no_wait_after=True)
     download = download_info.value
 
+    # Create datasets directory if it doesn't exist
+    datasets_dir = os.path.join(os.getcwd(), "datasets")
+    os.makedirs(datasets_dir, exist_ok=True)
+
     # Create date-stamped filename
     date_str = datetime.now().strftime("%Y-%m-%d")
     clean_filename = f"{sanitize_filename(link_text)}_{date_str}.csv"
-    save_path = os.path.join(os.getcwd(), clean_filename)
+    save_path = os.path.join(datasets_dir, clean_filename)
     download.save_as(save_path)
     print(f"✅ Saved to: {save_path}")
 
@@ -38,7 +42,7 @@ def download_csv_from_section(page, link_text):
     page.wait_for_selector("a:has-text('Active Registrants')")
 
 with sync_playwright() as p:
-    browser = p.chromium.launch()  # headless by default now
+    browser = p.chromium.launch()
     context = browser.new_context(accept_downloads=True)
 
     context.set_default_timeout(0)
