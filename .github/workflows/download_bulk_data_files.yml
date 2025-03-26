@@ -1,0 +1,37 @@
+name: Run FARA Bulk Data Downloader
+
+on:
+  schedule:
+    - cron: '0 9 * * *'      # Runs daily at 6 AM UTC
+  workflow_dispatch:         # Allows manual trigger via GitHub UI
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run download script
+        run: python bulk_data_files/download_bulk_data_files.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add bulk_data_files/
+          git commit -m "Update FARA bulk data files" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
