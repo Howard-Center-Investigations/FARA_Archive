@@ -1,9 +1,9 @@
-name: Run FARA Scraper 1 Daily
+name: Run FARA Scraper Daily
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # Runs every day at 12:00 UTC
-  workflow_dispatch:      # Allow manual runs too
+    - cron: '0 9 * * *'  # Daily at 12:00 UTC
+  workflow_dispatch:      # Manual trigger
 
 jobs:
   run-scraper:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
@@ -28,9 +28,8 @@ jobs:
         run: |
           python script.py
 
-      # Optional: Upload CSVs as artifacts
-      - name: 📦 Upload results
-        uses: actions/upload-artifact@v3
+      - name: 📦 Upload CSV results
+        uses: actions/upload-artifact@v4
         with:
           name: fara-csvs
           path: '*.csv'
