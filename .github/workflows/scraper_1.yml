@@ -2,7 +2,7 @@ name: Run FARA Scraper Daily
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # Daily at 12:00 UTC
+    - cron: '0 12 * * *'  # Runs daily at 12:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true  # Needed for push
+          persist-credentials: true  # Required for pushing changes
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
@@ -28,7 +28,7 @@ jobs:
 
       - name: 🧹 Delete old CSVs from datasets/
         run: |
-          rm -f datasets/*.csv
+          rm -f datasets/*.csv || true
 
       - name: 🚀 Run scraper
         run: |
@@ -38,8 +38,14 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add datasets/*.csv
-          git commit -m "🆕 Update FARA CSVs [auto]" || echo "No changes to commit"
-          git push
+
+          # Only proceed if CSVs exist
+          if ls datasets/*.csv 1> /dev/null 2>&1; then
+            git add datasets/*.csv
+            git commit -m "🆕 Update FARA CSVs [auto]" || echo "No changes to commit"
+            git push
+          else
+            echo "⚠️ No CSV files found to commit. Skipping push."
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
