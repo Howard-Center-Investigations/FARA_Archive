@@ -1,9 +1,9 @@
-name: Run FARA Scraper 1 Daily
+name: Run FARA Scraper Daily
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # Daily at 12:00 UTC
-  workflow_dispatch:      # Manual trigger
+    - cron: '0 12 * * *'  # Daily at 12:00 UTC
+  workflow_dispatch:
 
 jobs:
   run-scraper:
@@ -12,24 +12,34 @@ jobs:
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true  # Needed for push
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r datasets/requirements.txt
           playwright install --with-deps
+
+      - name: 🧹 Delete old CSVs from datasets/
+        run: |
+          rm -f datasets/*.csv
 
       - name: 🚀 Run scraper
         run: |
           python datasets/scraper_1.py
 
-      - name: 📦 Upload CSV results
-        uses: actions/upload-artifact@v4
-        with:
-          name: fara-csvs
-          path: '*.csv'
+      - name: ✅ Commit & Push new CSVs
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add datasets/*.csv
+          git commit -m "🆕 Update FARA CSVs [auto]" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
