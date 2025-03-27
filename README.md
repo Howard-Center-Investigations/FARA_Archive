@@ -2,6 +2,8 @@
 
 This is an archive of Foreign Agent Registration Act filings and data.
 
+### FARA Filing PDFs
+
 [This link](https://www.documentcloud.org/projects/221099-fara-storage-public/) goes to a static archive on DocumentCloud that hosts all FARA filings, of every type, from March 22nd 2025 thru the very first filing in 1942.
 
 - The file FARA_All_RegistrantDocs_03222025 in this repository contains a column "DocumentCloud Name," which can be used to search the archive for individual filings. The names are derived from the end of the urls that (currently) lead to the DOJ's copy of the record, and follow the format: RegistrationNumber-DocumentType-Date-MysteryExtraNumber.
@@ -14,9 +16,13 @@ This is an archive of Foreign Agent Registration Act filings and data.
 
 - The file failed_fara_downloads.csv in the repository contains a list of filings that cannot be successfully downloaded using the urls provided at FARA.gov
 
+### "Browse Filings" Datasets
+
 The "datasets" folder in this repository contains datasets from the [Browse Filings](https://efile.fara.gov/ords/fara/f?p=1381:1:1551967097995:::::) page of FARA.gov.
 
 - These files are updated a minimum of once per day
+
+### "Bulk Data" csvs
 
 The "bulk_data_files folder" in this repository contains the csv files available for download from the [Bulk Data](https://efile.fara.gov/ords/fara/f?p=107:21::::::) page of FARA/gov.
 
