@@ -2,7 +2,7 @@
 
 This is an archive of Foreign Agent Registration Act filings and data.
 
-### FARA Filing PDFs
+### FARA Filings PDFs
 
 [This link](https://www.documentcloud.org/projects/221099-fara-storage-public/) goes to a static archive on DocumentCloud that hosts all FARA filings, of every type, from March 22nd 2025 thru the very first filing in 1942.
 
