@@ -4,11 +4,11 @@ This is an archive of Foreign Agent Registration Act filings and data.
 
 ### FARA Filings PDFs
 
-[This link](https://www.documentcloud.org/projects/221099-fara-storage-public/) goes to a static archive on DocumentCloud that hosts all FARA filings, of every type, from March 22nd 2025 thru the very first filing in 1942.
+[This link](https://www.documentcloud.org/projects/221099-fara-storage-public/) goes to a static archive on DocumentCloud that hosts all FARA filings, of every type, from March 31, 2025 thru the very first filing in 1942.
 
-- The file FARA_All_RegistrantDocs_03222025 in this repository contains a column "DocumentCloud Name," which can be used to search the archive for individual filings. The names are derived from the end of the urls that (currently) lead to the DOJ's copy of the record, and follow the format: RegistrationNumber-DocumentType-Date-MysteryExtraNumber.
+- The file [FARA_All_RegistrantDocs.csv](https://github.com/Howard-Center-Investigations/FARA_Archive/raw/refs/heads/main/bulk_data_files/FARA_All_RegistrantDocs.csv) in this repository contains a column "DocumentCloud Name," which can be used to search the archive for individual filings. The names are derived from the end of the urls that (currently) lead to the DOJ's copy of the record, and follow the format: RegistrationNumber-DocumentType-Date-MysteryExtraNumber.
 
-- The archive currently consists of 117,968 documents. There are two missing -- I'll work to identify which those are and why they didn't upload
+- The archive currently consists of 118,079 documents. There are two missing -- I'll work to identify which those are and why they didn't upload
 
 - Big chunks of short forms and Registration Statements from 1942-2008 aren't available on the DOJ's website and are instead listed as "Available-FARA-Public-Office" in the excel doc, and therefore aren't included in our archive
 
