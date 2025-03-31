@@ -2,28 +2,27 @@ import os
 import pandas as pd
 from documentcloud import DocumentCloud
 
-# Get credentials from environment variables
+# Get environment variables
 username = os.getenv("DOCUMENTCLOUD_USERNAME")
 password = os.getenv("DOCUMENTCLOUD_PASSWORD")
 
 if not username or not password:
     raise ValueError("Missing DOCUMENTCLOUD_USERNAME or DOCUMENTCLOUD_PASSWORD in environment variables.")
 
-# Initialize DocumentCloud client
 client = DocumentCloud(username, password)
-
-# Define the project ID
 PROJECT_ID = 221099
 
-# Load new_files.csv
-csv_path = "new_files.csv"
+# Use absolute path based on script location
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(script_dir, "new_files.csv")
+
+# Load CSV
 if not os.path.exists(csv_path):
     raise FileNotFoundError(f"{csv_path} not found.")
 
 df = pd.read_csv(csv_path)
 urls = df["URL"].dropna()
 
-# Check if there are any URLs to upload
 if urls.empty:
     print("📭 No new URLs found in new_files.csv. Nothing to upload.")
 else:
