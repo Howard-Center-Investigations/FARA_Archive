@@ -33,7 +33,7 @@ jobs:
 
       - name: 🚀 Run scraper
         run: |
-          python datasets/scraper_1.py
+          python datasets/browse_filings_scraper.py
 
       - name: 📝 Commit and push CSVs
         run: |
