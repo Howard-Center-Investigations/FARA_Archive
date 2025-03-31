@@ -1,8 +1,14 @@
 import os
+import tempfile
+import requests
 import pandas as pd
 from documentcloud import DocumentCloud
+import urllib3
 
-# Get environment variables
+# 🔕 Disable SSL warnings
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# 🔐 Get environment variables
 username = os.getenv("DOCUMENTCLOUD_USERNAME")
 password = os.getenv("DOCUMENTCLOUD_PASSWORD")
 
@@ -12,29 +18,43 @@ if not username or not password:
 client = DocumentCloud(username, password)
 PROJECT_ID = 221099
 
-# Use absolute path based on script location
+# 📂 Resolve path to CSV
 script_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(script_dir, "new_files.csv")
 
-# Load CSV
+# 📄 Load CSV
 if not os.path.exists(csv_path):
     raise FileNotFoundError(f"{csv_path} not found.")
 
 df = pd.read_csv(csv_path)
 urls = df["URL"].dropna()
 
+# 🚀 Begin processing
 if urls.empty:
     print("📭 No new URLs found in new_files.csv. Nothing to upload.")
 else:
-    for url in urls:
-        try:
-            print(f"📤 Uploading: {url}")
-            document = client.documents.upload(
-                url,
-                access="public",
-                project=PROJECT_ID
-            )
-            print(f"✅ Uploaded: {document.title}")
-            print(f"🔗 DocumentCloud URL: {document.canonical_url}\n")
-        except Exception as e:
-            print(f"❌ Failed to upload {url}: {e}\n")
+    with tempfile.TemporaryDirectory() as temp_dir:
+        for url in urls:
+            try:
+                filename = os.path.basename(url.split("?")[0])
+                file_path = os.path.join(temp_dir, filename)
+
+                print(f"⬇️  Downloading: {url}")
+                response = requests.get(url, timeout=30, verify=False)
+                response.raise_for_status()
+
+                with open(file_path, "wb") as f:
+                    f.write(response.content)
+
+                print(f"📤 Uploading: {filename}")
+                document = client.documents.upload(
+                    file_path,
+                    access="public",
+                    project=PROJECT_ID
+                )
+
+                print(f"✅ Uploaded: {document.title}")
+                print(f"🔗 DocumentCloud URL: {document.canonical_url}\n")
+
+            except Exception as e:
+                print(f"❌ Failed to process {url}: {e}\n")
