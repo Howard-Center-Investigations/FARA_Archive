@@ -6,6 +6,7 @@ import io
 import os
 import urllib3
 import pandas as pd
+import shutil
 
 # Disable SSL warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -47,6 +48,21 @@ def compare_url_columns(current_csv, prior_csv, output_csv):
     new_df.to_csv(output_csv, index=False)
     print(f"New URLs saved to {output_csv}")
 
+def update_prior_list(current_csv, prior_folder="prior_list"):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    prior_path = os.path.join(script_dir, prior_folder)
+
+    os.makedirs(prior_path, exist_ok=True)
+
+    # Delete any existing CSVs in prior_list
+    for f in os.listdir(prior_path):
+        if f.endswith(".csv"):
+            os.remove(os.path.join(prior_path, f))
+
+    prior_csv_path = os.path.join(prior_path, os.path.basename(current_csv))
+    shutil.move(current_csv, prior_csv_path)
+    print(f"Moved current CSV to prior_list: {prior_csv_path}")
+
 if __name__ == "__main__":
     ZIP_URL = "https://efile.fara.gov/bulk/zip/FARA_All_RegistrantDocs.csv.zip?1742933813017.4006"
     download_and_extract_zip(ZIP_URL)
@@ -56,3 +72,4 @@ if __name__ == "__main__":
     output_csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "new_files.csv")
 
     compare_url_columns(current_csv_path, prior_csv_path, output_csv_path)
+    update_prior_list(current_csv_path)
