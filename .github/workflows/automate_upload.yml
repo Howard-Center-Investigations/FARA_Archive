@@ -34,14 +34,16 @@ jobs:
 
       - name: 🔍 Run list comparison script
         run: python list_comparison.py
+        working-directory: ./DocumentCloud_updater
 
       - name: ☁️ Upload new files to DocumentCloud
         run: python upload_to_documentcloud.py
+        working-directory: ./DocumentCloud_updater
 
       - name: 💾 Commit and push updated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add current_list/ prior_list/ new_files.csv
+          git add DocumentCloud_updater/current_list/ DocumentCloud_updater/prior_list/ DocumentCloud_updater/new_files.csv
           git commit -m "Automated update from workflow run" || echo "No changes to commit"
           git push
