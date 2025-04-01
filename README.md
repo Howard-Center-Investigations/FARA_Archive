@@ -4,7 +4,7 @@ This is an archive of Foreign Agent Registration Act filings and data.
 
 ### FARA Filings PDFs
 
-[This link](https://www.documentcloud.org/projects/221099-fara-storage-public/) goes to an archive on DocumentCloud that hosts all FARA filings, of every type, dating back to the very first filing in 1942.
+[This link](https://www.documentcloud.org/projects/221099-fara-storage-public/) goes to an archive on DocumentCloud that hosts every electronically available FARA filing, of every type, dating back to the very first filing in 1942.
 
 - The file [FARA_All_RegistrantDocs.csv](https://github.com/Howard-Center-Investigations/FARA_Archive/raw/refs/heads/main/bulk_data_files/FARA_All_RegistrantDocs.csv) in this repository contains a column "URL" which can be used to search the DocumentCloud archive for individual filings. The names of files in DocumentCloud are derived from the end of the urls that (currently) lead to the DOJ's copy of the record. So if you want to search DocumentCloud for a file whose url is "https://efile.fara.gov/docs/7002-Informational-Materials-20250328-379.pdf" then search DocumentCloud for "7002-Informational-Materials-20250328-379".
 
