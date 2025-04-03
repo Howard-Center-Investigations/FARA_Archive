@@ -24,6 +24,6 @@ The "datasets" folder in this repository contains datasets from the [Browse Fili
 
 ### "Bulk Data" csvs
 
-The "bulk_data_files folder" in this repository contains the csv files available for download from the [Bulk Data](https://efile.fara.gov/ords/fara/f?p=107:21::::::) page of FARA/gov.
+The "bulk_data_files folder" in this repository contains the csv files available for download from the [Bulk Data](https://efile.fara.gov/ords/fara/f?p=107:21::::::) page of FARA.gov.
 
 - These files are updated a minimum of once per day
