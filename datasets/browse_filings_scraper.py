@@ -21,27 +21,27 @@ def save_download(download, label):
 # STEP 1: Static Section Downloads
 def download_csv_from_section(page, link_text):
     print(f"\n📥 Downloading static section: {link_text}")
-    
-    page.wait_for_selector(f"a:has-text('{link_text}')")
-    page.click(f"a:has-text('{link_text}')")
-    page.wait_for_load_state("networkidle")
 
-    page.wait_for_selector("button:has-text('Actions')")
+    page.wait_for_selector(f"a:has-text('{link_text}')", timeout=120000)
+    page.click(f"a:has-text('{link_text}')")
+    page.wait_for_load_state("networkidle", timeout=120000)
+
+    page.wait_for_selector("button:has-text('Actions')", timeout=120000)
     page.click("button:has-text('Actions')")
 
-    page.wait_for_selector("text=Download")
+    page.wait_for_selector("text=Download", timeout=120000)
     page.click("text=Download")
 
-    with page.expect_download() as download_info:
-        page.wait_for_selector("text=CSV")
+    with page.expect_download(timeout=120000) as download_info:
+        page.wait_for_selector("text=CSV", timeout=120000)
         page.click("text=CSV", no_wait_after=True)
     download = download_info.value
 
     save_download(download, link_text)
 
     # Return to homepage
-    page.goto('https://efile.fara.gov/ords/fara/f?p=1381:1')
-    page.wait_for_selector("a:has-text('Active Registrants')")
+    page.goto('https://efile.fara.gov/ords/fara/f?p=1381:1', timeout=120000)
+    page.wait_for_selector("a:has-text('Active Registrants')", timeout=120000)
 
 # STEP 2: Date-Range Section Downloads
 fromdate_fields = {
@@ -60,30 +60,30 @@ fromdate_fields = {
 
 def process_date_range_section(page, section_name):
     print(f"\n📥 Downloading date-range section: {section_name}")
-    
-    page.goto("https://efile.fara.gov/ords/fara/f?p=1381:1")
-    page.wait_for_selector(f"a:has-text('{section_name}')")
+
+    page.goto("https://efile.fara.gov/ords/fara/f?p=1381:1", timeout=120000)
+    page.wait_for_selector(f"a:has-text('{section_name}')", timeout=120000)
     page.click(f"a:has-text('{section_name}')")
-    page.wait_for_load_state("networkidle")
+    page.wait_for_load_state("networkidle", timeout=120000)
 
     fromdate_field = fromdate_fields.get(section_name)
     if not fromdate_field:
         raise Exception(f"No FROMDATE mapping found for: {section_name}")
 
-    page.wait_for_selector(f"input[name='{fromdate_field}']")
+    page.wait_for_selector(f"input[name='{fromdate_field}']", timeout=120000)
     page.fill(f"input[name='{fromdate_field}']", "01/01/1900")
 
     page.click("button:has-text('Go')")
-    page.wait_for_load_state("networkidle")
+    page.wait_for_load_state("networkidle", timeout=120000)
 
-    page.wait_for_selector("button:has-text('Actions')")
+    page.wait_for_selector("button:has-text('Actions')", timeout=120000)
     page.click("button:has-text('Actions')")
 
-    page.wait_for_selector("text=Download")
+    page.wait_for_selector("text=Download", timeout=120000)
     page.click("text=Download")
 
-    with page.expect_download() as download_info:
-        page.wait_for_selector("text=CSV")
+    with page.expect_download(timeout=120000) as download_info:
+        page.wait_for_selector("text=CSV", timeout=120000)
         page.click("text=CSV", no_wait_after=True)
     download = download_info.value
 
@@ -94,6 +94,9 @@ with sync_playwright() as p:
     browser = p.chromium.launch()
     context = browser.new_context(accept_downloads=True)
     page = context.new_page()
+
+    # Set default timeout to 2 minutes
+    page.set_default_timeout(120000)
 
     # --- Step 1: Static Sections ---
     static_sections = [
@@ -115,8 +118,8 @@ with sync_playwright() as p:
     ]
 
     print("\n🟢 STEP 1: Downloading static sections...")
-    page.goto("https://efile.fara.gov/ords/fara/f?p=1381:1")
-    page.wait_for_selector("a:has-text('Active Registrants')")
+    page.goto("https://efile.fara.gov/ords/fara/f?p=1381:1", timeout=120000)
+    page.wait_for_selector("a:has-text('Active Registrants')", timeout=120000)
 
     for section in static_sections:
         try:
