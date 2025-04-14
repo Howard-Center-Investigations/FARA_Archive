@@ -53,7 +53,8 @@ jobs:
           # Update timestamp to force a commit
           echo "Last updated: $(date -u)" > datasets/last_updated.txt
 
-          git add datasets/*.csv datasets/last_updated.txt
+          # Stage ALL changes including deletions
+          git add -A datasets/
           git commit -m "📊 Update FARA CSVs [skip ci]" || echo "Nothing to commit"
 
           # Clean working directory before pulling
