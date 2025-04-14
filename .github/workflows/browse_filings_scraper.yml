@@ -31,7 +31,15 @@ jobs:
 
       - name: 🧹 Clean old CSVs
         run: |
-          rm -f datasets/*.csv || true
+          echo "📁 Listing datasets directory before cleanup:"
+          ls -l datasets || echo "No datasets directory yet."
+
+          echo "🧹 Removing old CSVs (if any)..."
+          mkdir -p datasets
+          rm -f datasets/*.csv
+
+          echo "📁 Listing datasets directory after cleanup:"
+          ls -l datasets
 
       - name: 🚀 Run scraper
         run: |
