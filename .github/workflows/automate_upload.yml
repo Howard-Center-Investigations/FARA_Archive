@@ -1,49 +1,49 @@
-name: Automate FARA Upload to DocumentCloud
+# name: Automate FARA Upload to DocumentCloud
 
-on:
-  schedule:
-    - cron: "30 8 * * *"  # Runs daily at 8:30 AM UTC
-  workflow_dispatch:       # Allows manual triggering from GitHub UI
+# on:
+#   schedule:
+#     - cron: "30 8 * * *"  # Runs daily at 8:30 AM UTC
+#   workflow_dispatch:       # Allows manual triggering from GitHub UI
 
-jobs:
-  run-scripts:
-    runs-on: ubuntu-latest
+# jobs:
+#   run-scripts:
+#     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write  # Required to push changes to the repository
+#     permissions:
+#       contents: write  # Required to push changes to the repository
 
-    env:
-      DOCUMENTCLOUD_USERNAME: ${{ secrets.DOCUMENTCLOUD_USERNAME }}
-      DOCUMENTCLOUD_PASSWORD: ${{ secrets.DOCUMENTCLOUD_PASSWORD }}
+#     env:
+#       DOCUMENTCLOUD_USERNAME: ${{ secrets.DOCUMENTCLOUD_USERNAME }}
+#       DOCUMENTCLOUD_PASSWORD: ${{ secrets.DOCUMENTCLOUD_PASSWORD }}
 
-    steps:
-      - name: 🛎️ Checkout repository
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: true  # Needed for git push
+#     steps:
+#       - name: 🛎️ Checkout repository
+#         uses: actions/checkout@v3
+#         with:
+#           persist-credentials: true  # Needed for git push
 
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+#       - name: 🐍 Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: "3.10"
 
-      - name: 📦 Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pandas requests documentcloud
+#       - name: 📦 Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install pandas requests documentcloud
 
-      - name: 🔍 Run list comparison script
-        run: python list_comparison.py
-        working-directory: ./DocumentCloud_updater
+#       - name: 🔍 Run list comparison script
+#         run: python list_comparison.py
+#         working-directory: ./DocumentCloud_updater
 
-      - name: ☁️ Upload new files to DocumentCloud
-        run: python upload_to_documentcloud.py
-        working-directory: ./DocumentCloud_updater
+#       - name: ☁️ Upload new files to DocumentCloud
+#         run: python upload_to_documentcloud.py
+#         working-directory: ./DocumentCloud_updater
 
-      - name: 💾 Commit and push updated files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add DocumentCloud_updater/current_list/ DocumentCloud_updater/prior_list/ DocumentCloud_updater/new_files.csv
-          git commit -m "Automated update from workflow run" || echo "No changes to commit"
-          git push
+#       - name: 💾 Commit and push updated files
+#         run: |
+#           git config user.name "github-actions[bot]"
+#           git config user.email "github-actions[bot]@users.noreply.github.com"
+#           git add DocumentCloud_updater/current_list/ DocumentCloud_updater/prior_list/ DocumentCloud_updater/new_files.csv
+#           git commit -m "Automated update from workflow run" || echo "No changes to commit"
+#           git push
