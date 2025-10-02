@@ -1,5 +1,7 @@
 # FARA Archive
 
+NOTE 10/1/2025: due to missing data from FARA.gov, daily updates to the DocumentCloud Archive have been temporarily paused.
+
 This is an archive of Foreign Agent Registration Act filings and data.
 
 ### FARA Filings PDFs
